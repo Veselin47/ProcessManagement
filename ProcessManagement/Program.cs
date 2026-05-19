@@ -1,4 +1,4 @@
-﻿using ProcessManagement;
+using ProcessManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +9,10 @@ namespace ProcessManagement
    
     class Program
     {
-        // Статична променлива за достъп до Singleton инстанцията
         static Company myStartup;
 
         static void Main(string[] args)
         {
-            // 1. Инициализиране на Singleton данните
             InitializeSampleData();
 
             bool exit = false;
@@ -27,7 +25,7 @@ namespace ProcessManagement
                 Console.WriteLine("3. Управление на задачи (Промяна на статус)");
                 Console.WriteLine("4. Инвестиране на капитал");
                 Console.WriteLine("5. Справка за проект (Прогрес %)");
-                Console.WriteLine("6. Запис на данни във файл (JSON Strategy)");
+                Console.WriteLine("6. Запис на данни във файл (JSON(1) / Text(2))");
                 Console.WriteLine("0. Изход");
                 Console.Write("\nИзберете опция: ");
 
@@ -94,7 +92,6 @@ namespace ProcessManagement
             {
                 Console.WriteLine("Изберете нов статус: 1. InProgress 2. Completed 3. Rejected");
                 string st = Console.ReadLine();
-                // Извикваме метода ChangeStatus от твоя клас Task
                 if (st == "1") task.ChangeStatus(Task.TaskStatus.InProgress);
                 else if (st == "2") task.ChangeStatus(Task.TaskStatus.Completed);
                 else if (st == "3") task.ChangeStatus(Task.TaskStatus.Rejected);
@@ -109,7 +106,6 @@ namespace ProcessManagement
                 foreach (var team in dept.Teams)
                     foreach (var proj in team.Projects)
                     {
-                        // Използваме твоето име на метод: GetProjectProgress
                         Console.WriteLine($"Проект: {proj.Name} | Прогрес: {proj.GetProjectProgress()}%");
                     }
             Console.WriteLine("\nНатиснете клавиш...");
@@ -132,9 +128,20 @@ namespace ProcessManagement
 
         static void SaveDataUI()
         {
-            Console.WriteLine("Избор на стратегия за запис: JSON");
-            // Използваме шаблона Strategy
-            ISaveStrategy strategy = new JsonSaveStrategy();
+
+            Console.WriteLine("Избор на стратегия за запис: JSON(1) Text(2)");
+            string choice = Console.ReadLine();
+            ISaveStrategy strategy;
+            if (choice == "1")
+                strategy = new JsonSaveStrategy();
+            else if (choice == "2")
+                strategy = new TextSaveStrategy();
+            else
+            {
+                Console.WriteLine("Невалиден избор. Използва се по подразбиране JSON стратегия.");
+                strategy = new JsonSaveStrategy();
+            }
+
             myStartup.Save(strategy, "startup_backup");
 
             Console.WriteLine("Натиснете клавиш...");
@@ -166,26 +173,26 @@ namespace ProcessManagement
 
         static void InitializeSampleData()
         {
-            // ПРИЛАГАНЕ НА SINGLETON: Инициализираме чрез статичния метод
             Company.Initialize("Alpha Tech", 100000, 2024, "ul. Vitosha 1", "contact@alpha.com", "0888112233");
 
-            // Вземаме инстанцията
             myStartup = Company.Instance;
 
-            // Създаваме примерни обекти
             Employee boss = new Employee("Георги Георгиев", "Мениджър", new DateTime(1980, 1, 1), 5000, 10, 4.8m);
-            Employee dev = new Employee("Иван Петров", "Програмист", new DateTime(1995, 5, 20), 3000, 3, 4.2m);
+            Employee dev1 = new Employee("Иван Петров", "Програмист", new DateTime(1995, 5, 20), 3000, 3, 4.2m);
+            Employee dev2 = new Employee("Петър Попов", "Програмист", new DateTime(1999, 7, 22), 3000, 2, 4.5m);
 
             Department itDept = new Department("IT", 2024, boss);
             Team devTeam = new Team("Web Team", boss);
 
-            devTeam.AddMember(dev);
+            devTeam.AddMember(dev1);
+            devTeam.AddMember(dev2);
             devTeam.AddMember(boss);
 
             Project p1 = new Project("Mobile App", DateTime.Now, DateTime.Now.AddMonths(2));
-            Task t1 = new Task("UI Design", DateTime.Now, DateTime.Now.AddDays(10), TaskPriority.High, dev);
-
+            Task t1 = new Task("UI Design", DateTime.Now, DateTime.Now.AddDays(10), TaskPriority.High, dev1);
+            Task t2 = new Task("Backend API", DateTime.Now, DateTime.Now.AddDays(20), TaskPriority.Medium, dev2);
             p1.AddTask(t1);
+            p1.AddTask(t2);
             devTeam.AddProject(p1);
             itDept.AddTeam(devTeam);
             myStartup.AddDepartment(itDept);
