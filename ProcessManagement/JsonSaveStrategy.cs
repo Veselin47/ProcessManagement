@@ -11,7 +11,7 @@ namespace ProcessManagement
             var options = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
             string json = System.Text.Json.JsonSerializer.Serialize(company, options);
             System.IO.File.WriteAllText(fileName + ".json", json);
-            Console.WriteLine($"Данните бяха успешно записани в {fileName}.json");
+            Console.WriteLine($"Data successfully saved in {fileName}.json"); 
         }
     }
 }
