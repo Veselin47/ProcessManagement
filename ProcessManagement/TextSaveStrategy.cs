@@ -8,8 +8,8 @@ namespace ProcessManagement
     {
         public void Save(Company company, string fileName)
         {
-            System.IO.File.WriteAllText(fileName + ".txt", $"Компания: {company.Name}\nКапитал: {company.Capital}");
-            Console.WriteLine("Записано в текстов формат (опростено).");
+            System.IO.File.WriteAllText(fileName + ".txt", $"Company: {company.Name}\nCapital: {company.Capital}");
+            Console.WriteLine("Saved in text format (simplified).");
         }
     }
 }
