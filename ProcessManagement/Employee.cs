@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProcessManagement
 {
-    public class Employee
+    public class Employee : IOrganizationComponent
     {
         public string Name { get; set; }
         public string Position { get; set; }
@@ -44,6 +44,10 @@ namespace ProcessManagement
         {
             Console.WriteLine($"Name: {Name}, Position: {Position}, Birth Date: {BirthDate.ToShortDateString()}, Salary: {Salary}, Years of Experience: {YearOfWorkExperience}, Performance Rating: {PerformanceRating}");
         }
-
+        public void Display(int depth)
+        {
+            string indent = new string('\t', depth);
+            Console.WriteLine($"{indent}Member: {Name}, Position: {Position}");
+        }
     }
 }

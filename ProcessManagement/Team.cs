@@ -4,7 +4,8 @@ using System.Text;
 
 namespace ProcessManagement
 {
-    public class Team
+    public class Team : IOrganizationComponent
+    
     {
         public string Name { get; set; }
         public Employee Leader { get; set; }
@@ -68,6 +69,16 @@ namespace ProcessManagement
                 {
                     Console.WriteLine($"\t{project.Name}, Deadline: {project.Deadline.ToShortDateString()}");
                 }
+        }
+        public void Display(int depth)
+        {
+            string indent = new string('\t', depth);
+            Console.WriteLine($"{indent}Team: {Name}, Leader: {Leader.Name}");
+
+            foreach (var member in Members)
+            {
+                member.Display(depth + 1);
+            }
         }
     }
 }
